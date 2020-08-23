@@ -46,6 +46,7 @@ namespace RealCommerce.Controllers
             string apiKey = ConfigurationManager.AppSettings["ApiKey"];
             string apiLanguage = ConfigurationManager.AppSettings["ApiLanguage"];
             string autoCompleteFile = ConfigurationManager.AppSettings["AutoCompleteResponseFile"];
+            string autoCompleteFilePath = System.Web.Hosting.HostingEnvironment.MapPath(autoCompleteFile);
 
             List<AutoCompleteCity> cityItemsList = null;
             HttpClient client = new HttpClient();
@@ -62,7 +63,7 @@ namespace RealCommerce.Controllers
             else
             {
                 //If the accuweather service unavailable, read the data from file
-                string jsonString = System.IO.File.ReadAllText(autoCompleteFile);
+                string jsonString = System.IO.File.ReadAllText(autoCompleteFilePath);
                 cityItemsList = JsonConvert.DeserializeObject<List<AutoCompleteCity>>(jsonString);
             }    
             return cityItemsList;
