@@ -4,6 +4,8 @@ Server side WEB.API project for Web application that shows the weather of some c
 The project was developed on the server with .NET Framework(Web API) with Visual Studio Community 2019, on the client side with Angular 9 and Bootstrap CSS with Visual Studio Code,
 version 1.47.1.
 
+To create database run please the script from the file WeatherDB.sql.
+
 To run the servers project you need open RealCommerce.sln - server side solution in the Visual Studio, run the command in the Package Manager Console: Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r and start the project. 
 On my computer the server was started with IIS Express with project URL: https://localhost:44382/. This way the server will be started.
 
