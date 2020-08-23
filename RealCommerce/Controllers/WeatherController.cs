@@ -19,10 +19,8 @@ namespace RealCommerce.Controllers
         #region Fields
 
         private WeatherBL _weatherBl;
-        private string _filePath = System.Web.Hosting.HostingEnvironment.MapPath("/AutoCompleteResponse.json");
 
         #endregion
-
 
         #region Constructors
 
@@ -33,19 +31,28 @@ namespace RealCommerce.Controllers
 
         #endregion
 
+        #region Public methods
+
+
+        /// <summary>
+        /// Search cities by cityName
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<List<AutoCompleteCity>> Search(string cityName)
         {
             string searchApiUrl = ConfigurationManager.AppSettings["AutoCompleteUrl"];
             string apiKey = ConfigurationManager.AppSettings["ApiKey"];
             string apiLanguage = ConfigurationManager.AppSettings["ApiLanguage"];
+            string autoCompleteFile = ConfigurationManager.AppSettings["AutoCompleteResponseFile"];
 
             List<AutoCompleteCity> cityItemsList = null;
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "C# App");
           
             string searchUrlWithParam = searchApiUrl + "?apikey=" + apiKey + "&q=" + cityName;
-
+            //Call to autocomplete accuweather API
             HttpResponseMessage response = await client.GetAsync(searchUrlWithParam);
             if (response.IsSuccessStatusCode)
             {
@@ -54,13 +61,19 @@ namespace RealCommerce.Controllers
             }
             else
             {
-                string jsonString = System.IO.File.ReadAllText(_filePath);
+                //If the accuweather service unavailable, read the data from file
+                string jsonString = System.IO.File.ReadAllText(autoCompleteFile);
                 cityItemsList = JsonConvert.DeserializeObject<List<AutoCompleteCity>>(jsonString);
             }    
             return cityItemsList;
             
         }
 
+        /// <summary>
+        /// Get current city by city key.
+        /// </summary>
+        /// <param name="cityKey"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<List<CurrentWeather>> GetCurrentWeather(string cityKey)
         {
@@ -79,6 +92,7 @@ namespace RealCommerce.Controllers
             client.DefaultRequestHeaders.Add("User-Agent", "C# App");
 
             string searchUrlWithParams = conditionsApiUrl + cityKey + "?apikey=" + apiKey + "&details=false";
+            //Call to current conditions API to get current weather
             HttpResponseMessage response = await client.GetAsync(searchUrlWithParams);
             if (response.IsSuccessStatusCode)
             {
@@ -107,6 +121,7 @@ namespace RealCommerce.Controllers
             }
             else
             {
+                //If the current conditions service unavailable, fill hardcoded weather data for the client
                 CurrentWeather weather = new CurrentWeather();
                 weather.CityKey = cityKey;
                 weather.Temperature = 32.5m;
@@ -118,6 +133,7 @@ namespace RealCommerce.Controllers
 
             if (currentWeatherLst != null && currentWeatherLst.Count > 0)
             {
+                //To add weather conditions records to the table
                 foreach (CurrentWeather weather in currentWeatherLst)
                 {
                     _weatherBl.AddCurrentWeather(weather);
@@ -127,23 +143,39 @@ namespace RealCommerce.Controllers
             return currentWeatherLst;
         }
 
+        /// <summary>
+        /// To get all favorites cities
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public List<FavoriteCity> GetFavorites()
         {
             return _weatherBl.GetFavorites();
         }
 
+        /// <summary>
+        /// The methods adds city to favorites cities 
+        /// </summary>
+        /// <param name="city"></param>
+        /// <returns></returns>
         [HttpPost]
         public Response AddToFavorites([FromBody] FavoriteCity city)
         {
             return _weatherBl.AddFavorite(city);
         }
 
+        /// <summary>
+        /// The method removes city from favorites cities 
+        /// </summary>
+        /// <param name="cityId"></param>
+        /// <returns></returns>
         [HttpDelete]
         public bool DeleteFavorite(string cityId)
         {
             return _weatherBl.DeleteFavorite(cityId);
         }
+
+        #endregion
 
     }
 }

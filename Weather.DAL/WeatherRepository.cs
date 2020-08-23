@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Weather.DAL
 {
@@ -25,6 +24,10 @@ namespace Weather.DAL
 
         #region Public methods
 
+        /// <summary>
+        /// Gets favorits cities from FavoriteCity table. 
+        /// </summary>
+        /// <returns></returns>
         public List<FavoriteCity> GetFavorites()
         {
             using (_context = new WeatherDBContext())
@@ -33,6 +36,11 @@ namespace Weather.DAL
             }
         }
 
+        /// <summary>
+        /// Gets current weather of the city.
+        /// </summary>
+        /// <param name="cityKey"></param>
+        /// <returns></returns>
         public List<CurrentWeather> GetCityCurrentWeather(string cityKey)
         {
             List<CurrentWeather> currentWeatherList = null;
@@ -44,6 +52,10 @@ namespace Weather.DAL
             return currentWeatherList;
         }
 
+        /// <summary>
+        /// The method adds current weather to the CurrentWeather table.
+        /// </summary>
+        /// <param name="weather"></param>
         public void AddCurrentWeather(CurrentWeather weather)
         {
             using (_context = new WeatherDBContext())
@@ -53,6 +65,11 @@ namespace Weather.DAL
             }
         }
 
+        /// <summary>
+        /// The method adds city to FavoriteCity table.
+        /// </summary>
+        /// <param name="city"></param>
+        /// <returns></returns>
         public Response AddFavorite(FavoriteCity city)
         {
             Response response = new Response();
@@ -77,6 +94,11 @@ namespace Weather.DAL
             return response;
         }
 
+        /// <summary>
+        /// Remove the city from FavoriteCity table.
+        /// </summary>
+        /// <param name="city"></param>
+        /// <returns></returns>
         public bool DeleteFavorite(FavoriteCity city)
         {
             using (_context = new WeatherDBContext())
