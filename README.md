@@ -5,7 +5,7 @@ The project was developed on the server with .NET Framework(Web API) with Visual
 
 To create database run please the script from the the file WeatherDB.sql. The file exists in the root of RealCommerce repository.
 
-To run the servers project you need open RealCommerce.sln - server side solution in the Visual Studio, run the command in the Package Manager Console: Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r and start the project. 
+To run the servers project you need download code from RealCommerce repository and open RealCommerce.sln - server side solution in the Visual Studio, run the command in the Package Manager Console: Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r and start the project. 
 On my computer the server was started with IIS Express with project URL: https://localhost:44382/. This way the server will be started.
 
 To run clients side you need open the RealCommerceClient repository, download the real-weather-site.zip file and extract files from it.
